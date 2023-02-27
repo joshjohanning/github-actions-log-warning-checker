@@ -20,4 +20,4 @@ joshjohanning-org/actions-linter-testing,CI,https://github.com/joshjohanning-org
 joshjohanning-org/actions-linter-testing,new-workflow,https://github.com/joshjohanning-org/actions-linter-testing/blob/main/.github/workflows/new-file.yml,yes
 ```
 
-[^1]: Recent is defined as the last 5 workflow runs, modify `WORKFLOW_RUNS_TO_CHECK` as needed.
+[^1]: Recent is defined as the last 2 workflow runs, modify `WORKFLOW_RUNS_TO_CHECK` as needed.

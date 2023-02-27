@@ -7,7 +7,8 @@
 #    (or create a list of repos in a csv file, 1 per line, with a trailing empty line at the end of the file)
 # Step 2: ./github-actions-log-warning-checker.sh repos.csv output.csv
 
-WORKFLOW_RUNS_TO_CHECK=5
+WORKFLOW_RUNS_TO_CHECK=2
+WARNING_LOG_MESSAGE="deprecated and will be disabled soon"
 
 if [ $# -lt "2" ]; then
     echo "Usage: $0 <repo_filename> <output_filename>"
@@ -54,7 +55,7 @@ do
             run_display_title=$(echo $run | jq -r '.display_title')
             echo "    >> Checking run: $run_display_title ($run_id)"
             run_output=$(gh run view $run_id -R $org/$repo)
-            if [[ $run_output == *"deprecated and will be disabled soon"* ]]; then
+            if [[ $run_output == *"$WARNING_LOG_MESSAGE"* ]]; then
                 echo "      >> !!! found deprecated message"
                 if [[ $i == 0 ]]; then
                     latest="yes"
