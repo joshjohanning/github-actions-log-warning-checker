@@ -1,4 +1,4 @@
-# actions-logs-warning-checker
+# github-actions-log-warning-checker
 
 - Runs through recent[^1] workflow runs to see if there are any warnings in the logs
 - Outputs results to a specified CSV file
@@ -10,7 +10,7 @@
 2. Run `./generate-repos.sh <org> > repos.csv` 
     - Modify list as needed
     - Or create a list of repos in a csv file, `<org/<repo>`, 1 per line, with a trailing empty line at the end of the file
-3. Run: `./github-actions-warning-checker.sh repos.csv output.csv`
+3. Run: `./github-actions-log-warning-checker.sh repos.csv output.csv`
 
 ## Example Output
 
