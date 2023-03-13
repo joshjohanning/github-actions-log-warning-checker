@@ -1,6 +1,6 @@
 # github-actions-log-warning-checker
 
-- Runs through recent[^1] workflow runs to see if there are any `set-output` / `save-state` [deprecated workflow command](https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/) warnings in the logs
+- In a list of repositories, run through recent[^1] workflow runs to see if there are any `set-output` / `save-state` [deprecated workflow command](https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/) warnings in the logs
 - Outputs results to a specified CSV file
 - In the output CSV, there is a column to denote whether the warning was found in the latest workflow run or not
 
