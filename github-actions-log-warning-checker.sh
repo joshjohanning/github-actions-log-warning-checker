@@ -15,20 +15,23 @@ if [ $# -lt "2" ]; then
     exit 1
 fi
 
-if [ ! -f "$1" ]; then
-    echo "Repo input file $1 does not exist"
+filename="$1"
+output="$2"
+
+if [ ! -f "$filename" ]; then
+    echo "Repo input file $filename does not exist"
     exit 1
 fi
 
-# mv output.log if it exists
-if [ -f "$2" ]; then
+# mv output file if it exists
+if [ -f "$output" ]; then
     date=$(date +"%Y-%m-%d %T")
-    mv $2 "$2-$date.csv"
+    mv $output "$output-$date.csv"
 fi
 
-echo "repo,workflow_name,workflow_url,found_in_latest_workflow_run" > output.csv
 
-filename="$1"
+
+echo "repo,workflow_name,workflow_url,found_in_latest_workflow_run" > $output
 
 while read -r repofull ; 
 do
@@ -62,7 +65,7 @@ do
                 else
                     latest="no"
                 fi
-                echo "$org/$repo,$workflow_name,$workflow_url,$latest" >> output.csv
+                echo "$org/$repo,$workflow_name,$workflow_url,$latest" >> $output
                 break
             fi
             i=$((i+1))
