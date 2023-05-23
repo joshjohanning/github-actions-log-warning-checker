@@ -8,7 +8,7 @@
 # Step 2: ./github-actions-log-warning-checker.sh repos.csv output.csv
 
 WORKFLOW_RUNS_TO_CHECK=2
-WARNING_LOG_MESSAGE="deprecated and will be disabled soon"
+WARNING_LOG_MESSAGES=("deprecated and will be disabled soon" "Node.js 12 actions are deprecated")
 
 if [ $# -lt "2" ]; then
     echo "Usage: $0 <repo_filename> <output_filename>"
@@ -58,16 +58,13 @@ do
             run_display_title=$(echo $run | jq -r '.display_title')
             echo "    >> Checking run: $run_display_title ($run_id)"
             run_output=$(gh run view $run_id -R $org/$repo)
-            if [[ $run_output == *"$WARNING_LOG_MESSAGE"* ]]; then
-                echo "      >> !!! found deprecated message"
-                if [[ $i == 0 ]]; then
-                    latest="yes"
-                else
-                    latest="no"
+            for warning_message in "${WARNING_LOG_MESSAGES[@]}"; do
+                if [[ $run_output == *"$warning_message"* ]]; then
+                    latest=$([ "$i" -eq 0 ] && echo "yes" || echo "no")
+                    echo "$org/$repo,$workflow_name,$workflow_url,$latest" >> "$output"
+                    break 2
                 fi
-                echo "$org/$repo,$workflow_name,$workflow_url,$latest" >> $output
-                break
-            fi
+            done
             i=$((i+1))
         done
     done
