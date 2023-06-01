@@ -8,7 +8,7 @@
 # Step 2: ./github-actions-log-warning-checker.sh repos.csv output.csv
 
 WORKFLOW_RUNS_TO_CHECK=2
-WARNING_LOG_MESSAGE="deprecated and will be disabled soon"
+WARNING_LOG_MESSAGES=("deprecated and will be disabled soon" "Node.js 12 actions are deprecated")
 
 if [ $# -lt "2" ]; then
     echo "Usage: $0 <repo_filename> <output_filename>"
@@ -29,9 +29,7 @@ if [ -f "$output" ]; then
     mv $output "$output-$date.csv"
 fi
 
-
-
-echo "repo,workflow_name,workflow_url,found_in_latest_workflow_run" > $output
+echo "repo,workflow_name,workflow_url,finding,found_in_latest_workflow_run" > $output
 
 while read -r repofull ; 
 do
@@ -58,16 +56,24 @@ do
             run_display_title=$(echo $run | jq -r '.display_title')
             echo "    >> Checking run: $run_display_title ($run_id)"
             run_output=$(gh run view $run_id -R $org/$repo)
-            if [[ $run_output == *"$WARNING_LOG_MESSAGE"* ]]; then
-                echo "      >> !!! found deprecated message"
-                if [[ $i == 0 ]]; then
-                    latest="yes"
-                else
-                    latest="no"
+            for warning_message in "${WARNING_LOG_MESSAGES[@]}"; do
+                if [[ $run_output == *"$warning_message"* ]]; then
+                    # determine if this is a deprecated workflow command or deprecated node12 action
+                    case $warning_message in
+                    "${WARNING_LOG_MESSAGES[0]}"*)
+                        FINDING="workflow command"
+                        ;;
+                    "${WARNING_LOG_MESSAGES[1]}"*)
+                        FINDING="node12 action"
+                        ;;
+                    esac
+                    # find if this was found in the latest run or not
+                    latest=$([ "$i" -eq 0 ] && echo "yes" || echo "no")
+                    # print the results
+                    echo "$org/$repo,$workflow_name,$workflow_url,$FINDING,$latest" >> "$output"
+                    break 2
                 fi
-                echo "$org/$repo,$workflow_name,$workflow_url,$latest" >> $output
-                break
-            fi
+            done
             i=$((i+1))
         done
     done
@@ -79,3 +85,4 @@ done < "$filename"
 
 # example of warning
 # Warning: The `set-output` command is deprecated and will be disabled soon. Please upgrade to using Environment Files. For more information see: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+# Warning: Node.js 12 actions are deprecated. Please update the following actions to use Node.js 16: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838. For more information see: https://github.blog/changelog/2022-09-22-github-actions-all-actions-will-begin-running-on-node16-instead-of-node12/.
