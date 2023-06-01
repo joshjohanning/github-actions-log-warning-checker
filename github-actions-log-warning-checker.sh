@@ -61,10 +61,10 @@ do
                     # determine if this is a deprecated workflow command or deprecated node12 action
                     case $warning_message in
                     "${WARNING_LOG_MESSAGES[0]}"*)
-                        FINDING="workflow command"
+                        FINDING="Workflow command"
                         ;;
                     "${WARNING_LOG_MESSAGES[1]}"*)
-                        FINDING="node12 action"
+                        FINDING="Node.js 12 action"
                         ;;
                     esac
                     # find if this was found in the latest run or not
