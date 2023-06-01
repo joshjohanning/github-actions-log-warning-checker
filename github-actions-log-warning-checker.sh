@@ -29,9 +29,7 @@ if [ -f "$output" ]; then
     mv $output "$output-$date.csv"
 fi
 
-
-
-echo "repo,workflow_name,workflow_url,found_in_latest_workflow_run" > $output
+echo "repo,workflow_name,workflow_url,finding,found_in_latest_workflow_run" > $output
 
 while read -r repofull ; 
 do
@@ -60,8 +58,19 @@ do
             run_output=$(gh run view $run_id -R $org/$repo)
             for warning_message in "${WARNING_LOG_MESSAGES[@]}"; do
                 if [[ $run_output == *"$warning_message"* ]]; then
+                    # determine if this is a deprecated workflow command or deprecated node12 action
+                    case $warning_message in
+                    "${WARNING_LOG_MESSAGES[0]}"*)
+                        FINDING="workflow command"
+                        ;;
+                    "${WARNING_LOG_MESSAGES[1]}"*)
+                        FINDING="node12 action"
+                        ;;
+                    esac
+                    # find if this was found in the latest run or not
                     latest=$([ "$i" -eq 0 ] && echo "yes" || echo "no")
-                    echo "$org/$repo,$workflow_name,$workflow_url,$latest" >> "$output"
+                    # print the results
+                    echo "$org/$repo,$workflow_name,$workflow_url,$FINDING,$latest" >> "$output"
                     break 2
                 fi
             done
