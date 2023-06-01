@@ -17,8 +17,8 @@
 
 ```csv
 repo,workflow_name,workflow_url,finding,found_in_latest_workflow_run
-joshjohanning-org/actions-linter-testing,CI,https://github.com/joshjohanning-org/actions-linter-testing/blob/main/.github/workflows/blank.yml,Deprecated workflow command,no
-joshjohanning-org/actions-linter-testing,new-workflow,https://github.com/joshjohanning-org/actions-linter-testing/blob/main/.github/workflows/new-file.yml,Deprecated workflow command,yes
+joshjohanning-org/actions-linter-testing,CI,https://github.com/joshjohanning-org/actions-linter-testing/blob/main/.github/workflows/blank.yml,Workflow command,no
+joshjohanning-org/actions-linter-testing,new-workflow,https://github.com/joshjohanning-org/actions-linter-testing/blob/main/.github/workflows/new-file.yml,Workflow command,yes
 joshjohanning-org/actions-linter-testing,node12,https://github.com/joshjohanning-org/actions-linter-testing/blob/main/.github/workflows/node12.yml,Node.js 12 action,yes
 ```
 
